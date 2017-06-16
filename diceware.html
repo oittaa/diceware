@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Diceware</title>
+</head>
+<body>
+<p id="p1">...</p>
+<script>
+"use strict";
+
+// Generate a number r with equal chance in  min <= r < max.
+function randrange(min, max) {
+    var range = max - min;
+    if (range <= 0) {
+        throw new Exception('max must be larger than min');
+    } else if (range == 1) {
+        return min;
+    }
+    var requestBytes = Math.ceil(Math.log2(range) / 8);
+    var maxNum = Math.pow(256, requestBytes);
+    var ar = new Uint8Array(requestBytes);
+
+    while (true) {
+        window.crypto.getRandomValues(ar);
+
+        var val = 0;
+        for (var i = 0;i < requestBytes;i++) {
+            val = (val << 8) + ar[i];
+        }
+
+        if (val + range - (val % range) < maxNum) {
+            return min + (val % range);
+        }
+    }
+}
+
+var wordlist = 'eff_large_wordlist.txt';
+var passphrase = '';
+var client = new XMLHttpRequest();
+client.open('GET', wordlist);
+client.onreadystatechange = function() {
+  if (client.readyState== 4 && client.status == 200){
+    wordlist = client.responseText.split("\n");
+    for (var i = 0;i < 6; i++) {
+      if (i) passphrase += ' ';
+      passphrase += wordlist[randrange(0, wordlist.length)].split("\t").splice(-1);
+    }
+    document.getElementById("p1").innerHTML = passphrase; 
+  }
+}
+client.send();
+</script>
+</body>
+</html> 

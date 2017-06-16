@@ -7,5 +7,5 @@ args = parser.parse_args()
 
 r = random.SystemRandom()
 with open('eff_large_wordlist.txt') as f:
-    lines = f.readlines()
+    lines = list(f)
     print(' '.join(r.choice(lines).split()[1] for i in range(args.n)))
