@@ -40,13 +40,13 @@ var passphrase = '';
 var client = new XMLHttpRequest();
 client.open('GET', wordlist);
 client.onreadystatechange = function() {
-  if (client.readyState== 4 && client.status == 200){
+  if (client.readyState == 4 && client.status == 200) {
     wordlist = client.responseText.split("\n");
     for (var i = 0;i < 6; i++) {
       if (i) passphrase += ' ';
       passphrase += wordlist[randrange(0, wordlist.length)].split("\t").splice(-1);
     }
-    document.getElementById("p1").innerHTML = passphrase; 
+    document.getElementById("p1").innerHTML = passphrase;
   }
 }
 client.send();
